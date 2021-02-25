@@ -14,7 +14,7 @@ func newProductWithNilMapper() *productWithNilMapper {
 	return &productWithNilMapper{}
 }
 
-func (p productWithNilMapper) ValidationMapper() map[string]ValidateFunc {
+func (p productWithNilMapper) ValidationMap() map[string]ValidateFunc {
 	return nil
 }
 
@@ -24,7 +24,7 @@ func newProductWithEmptyMapper() *productWithEmptyMapper {
 	return &productWithEmptyMapper{}
 }
 
-func (p productWithEmptyMapper) ValidationMapper() map[string]ValidateFunc {
+func (p productWithEmptyMapper) ValidationMap() map[string]ValidateFunc {
 	return map[string]ValidateFunc{}
 }
 
@@ -48,7 +48,7 @@ func (p product) validateName() error {
 	return nil
 }
 
-func (p product) ValidationMapper() map[string]ValidateFunc {
+func (p product) ValidationMap() map[string]ValidateFunc {
 	return map[string]ValidateFunc{
 		"name":  p.validateName,
 		"price": p.unitPrice.validate,
@@ -67,7 +67,7 @@ func (p price) validate() error {
 
 func TestValidate(t *testing.T) {
 	type in struct {
-		validator Validator
+		validator ValidationMapper
 		mask      []string
 	}
 
@@ -76,7 +76,7 @@ func TestValidate(t *testing.T) {
 	}
 
 	type validatorState struct {
-		validator Validator
+		validator ValidationMapper
 		state     string
 	}
 
@@ -127,19 +127,19 @@ func TestValidate(t *testing.T) {
 		message: fmt.Sprintf("%s", validatorStates[0].state),
 		in:      in{validator: validatorStates[0].validator},
 		out: out{errs: []string{
-			ErrNilValidator.Error(),
+			ErrNilMapper.Error(),
 		}},
 	}, {
 		message: fmt.Sprintf("%s", validatorStates[1].state),
 		in:      in{validator: validatorStates[1].validator},
 		out: out{errs: []string{
-			ErrNilOrEmptyMapper.Error(),
+			ErrNilOrEmptyValidationMap.Error(),
 		}},
 	}, {
 		message: fmt.Sprintf("%s", validatorStates[2].state),
 		in:      in{validator: validatorStates[2].validator},
 		out: out{errs: []string{
-			ErrNilOrEmptyMapper.Error(),
+			ErrNilOrEmptyValidationMap.Error(),
 		}},
 	}, {
 		message: fmt.Sprintf("%s • %s", validatorStates[3].state, maskStates[0].state),
