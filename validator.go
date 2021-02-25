@@ -20,6 +20,11 @@ type ValidationMapper interface {
 	ValidationMap() map[string]ValidateFunc
 }
 
+// Validator is interface implemented by types that can be validated
+type Validator interface {
+	Validate() error
+}
+
 // Validate return stacked error of validator using field mask
 // if field mask is empty, the operation applies to all fields (as if a field mask of all fields has been specified).
 func Validate(mapper ValidationMapper, mask ...string) error {
