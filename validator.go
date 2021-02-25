@@ -73,9 +73,9 @@ func getValidationMap(mapper ValidationMapper) (map[string]ValidateFunc, error) 
 	return vm, nil
 }
 
-func extractMapKeys(m map[string]ValidateFunc) []string {
-	keys := make([]string, 0, len(m))
-	for k := range m {
+func extractMapKeys(vm map[string]ValidateFunc) []string {
+	keys := make([]string, 0, len(vm))
+	for k := range vm {
 		keys = append(keys, k)
 	}
 
